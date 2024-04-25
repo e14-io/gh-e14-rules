@@ -21,17 +21,17 @@ jobs:
       - name: Build
         run: script/build.sh
 
-    - id: determine_release_tag
-      name: Determine release tag
-      run: |
-        if [[ $GITHUB_REF = refs/tags/* ]]; then
-          tag="${GITHUB_REF#refs/tags/}"
-        else
-          tag="$(git describe --tags --abbrev=0)"
-        fi
+      - id: determine_release_tag
+        name: Determine release tag
+        run: |
+          if [[ $GITHUB_REF = refs/tags/* ]]; then
+            tag="${GITHUB_REF#refs/tags/}"
+          else
+            tag="$(git describe --tags --abbrev=0)"
+          fi
 
-        echo "TAG=$tag" >> "$GITHUB_OUTPUT"
-      shell: bash
+          echo "TAG=$tag" >> "$GITHUB_OUTPUT"
+        shell: bash
 
       - name: Release
         # run: gh release create "$GH_RELEASE_TAG" $prerelease $draft_release --title="${GH_RELEASE_TAG#v}" --generate-notes -- "${assets[@]}"
