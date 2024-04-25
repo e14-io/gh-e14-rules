@@ -34,4 +34,5 @@ jobs:
         run: script/build_and_release.sh
         env:
           GH_RELEASE_TAG: ${{ steps.determine_release_tag.outputs.TAG }}
+          GH_TOKEN: ${{ github.token }}
         shell: bash
