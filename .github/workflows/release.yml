@@ -18,9 +18,6 @@ jobs:
         with:
           deno-version: "~1.42"
 
-      - name: Build
-        run: script/build.sh
-
       - id: determine_release_tag
         name: Determine release tag
         run: |
@@ -33,9 +30,8 @@ jobs:
           echo "TAG=$tag" >> "$GITHUB_OUTPUT"
         shell: bash
 
-      - name: Release
-        # run: gh release create "$GH_RELEASE_TAG" $prerelease $draft_release --title="${GH_RELEASE_TAG#v}" --generate-notes -- "${assets[@]}"
-        run: gh release create "$GH_RELEASE_TAG" ./dist/*
+      - name: Build and Release
+        run: script/build_and_release.sh
         env:
-          GH_TOKEN: ${{ github.token }}
           GH_RELEASE_TAG: ${{ steps.determine_release_tag.outputs.TAG }}
+        shell: bash
