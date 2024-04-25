@@ -10,7 +10,29 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: cli/gh-extension-precompile@v1
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Deno
+        uses: denoland/setup-deno@v1
         with:
-          build_script_override: "script/build.sh"
+          deno-version: "~1.42"
+
+      - id: determine_release_tag
+        name: Determine release tag
+        run: |
+          if [[ $GITHUB_REF = refs/tags/* ]]; then
+            tag="${GITHUB_REF#refs/tags/}"
+          else
+            tag="$(git describe --tags --abbrev=0)"
+          fi
+
+          echo "TAG=$tag" >> "$GITHUB_OUTPUT"
+        shell: bash
+
+      - name: Build and Release
+        run: script/build_and_release.sh
+        env:
+          GH_RELEASE_TAG: ${{ steps.determine_release_tag.outputs.TAG }}
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
