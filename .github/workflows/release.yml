@@ -24,3 +24,5 @@ jobs:
       - name: Release
         # run: gh release create "$GH_RELEASE_TAG" $prerelease $draft_release --title="${GH_RELEASE_TAG#v}" --generate-notes -- "${assets[@]}"
         run: gh release create "$GH_RELEASE_TAG" ./dist/*
+        env:
+          GH_TOKEN: ${{ github.token }}
